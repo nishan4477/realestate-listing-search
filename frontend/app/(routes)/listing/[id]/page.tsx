@@ -3,15 +3,18 @@
 import { useAppControllerGetListingById } from "@/app/_generated/api/realEstateApiComponents";
 import { Breadcrumb } from "@/components";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
-export default function ListingDetailPage() {
+function ListingDetailContent() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const id = params.id as string;
+  const isAdmin = searchParams.get("isAdmin") === "true";
 
   const { data, isLoading, isError, error } = useAppControllerGetListingById({
     pathParams: { id },
+    queryParams: { isAdmin },
   });
 
   const [activeImage, setActiveImage] = useState(0);
@@ -47,8 +50,9 @@ export default function ListingDetailPage() {
             Error loading property
           </h2>
           <p className="text-gray-500 mb-6">
-            {(error as any)?.message ||
-              "The property could not be found or an error occurred."}
+            {error instanceof Error
+              ? error.message
+              : "The property could not be found or an error occurred."}
           </p>
           <Link
             href="/listing"
@@ -110,6 +114,11 @@ export default function ListingDetailPage() {
                 </svg>
                 {listing.suburb}
               </span>
+              {isAdmin && (
+                <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-yellow-100 text-yellow-800 border border-yellow-200 ml-2">
+                  Admin View
+                </span>
+              )}
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight">
               {listing.title}
@@ -191,6 +200,31 @@ export default function ListingDetailPage() {
                 )}
               </div>
             </div>
+
+            {/* Internal Notes (Admins Only) */}
+            {isAdmin && listing.internalNotes && (
+              <div className="bg-yellow-50 rounded-3xl p-6 shadow-sm border border-yellow-200 mt-8">
+                <div className="flex items-center mb-4 text-yellow-800">
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    ></path>
+                  </svg>
+                  <h3 className="font-bold">Internal Notes</h3>
+                </div>
+                <p className="text-yellow-700 text-sm whitespace-pre-line">
+                  {listing.internalNotes}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Sidebar - Details & Action */}
@@ -256,14 +290,6 @@ export default function ListingDetailPage() {
                 </div>
               </div>
 
-              <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl transform hover:-translate-y-1 mb-4">
-                Contact Agent
-              </button>
-
-              <button className="w-full bg-white border-2 border-indigo-100 hover:border-indigo-600 text-indigo-600 font-bold py-4 px-6 rounded-xl transition-all duration-300 mb-4">
-                Schedule a Tour
-              </button>
-
               <div className="text-center text-sm text-gray-500 mt-6">
                 Property ID:{" "}
                 <span className="font-mono">
@@ -271,31 +297,6 @@ export default function ListingDetailPage() {
                 </span>
               </div>
             </div>
-
-            {/* Internal Notes (Admins Only typically) */}
-            {listing.internalNotes && (
-              <div className="bg-yellow-50 rounded-3xl p-6 shadow-sm border border-yellow-200">
-                <div className="flex items-center mb-4 text-yellow-800">
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                    ></path>
-                  </svg>
-                  <h3 className="font-bold">Internal Notes</h3>
-                </div>
-                <p className="text-yellow-700 text-sm whitespace-pre-line">
-                  {listing.internalNotes}
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -320,5 +321,21 @@ export default function ListingDetailPage() {
         }}
       />
     </div>
+  );
+}
+
+export default function ListingDetailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center bg-gray-50">
+          <div className="text-xl font-semibold text-gray-500 animate-pulse">
+            Loading property...
+          </div>
+        </div>
+      }
+    >
+      <ListingDetailContent />
+    </Suspense>
   );
 }

@@ -3,11 +3,12 @@ import Link from "next/link";
 
 interface ListingCardProps {
   listing: ListingItemDto;
+  isAdmin?: boolean;
 }
 
-export const ListingCard = ({ listing }: ListingCardProps) => {
+export const ListingCard = ({ listing, isAdmin }: ListingCardProps) => {
   return (
-    <Link href={`/listing/${listing.id}`} className="group block h-full">
+    <Link href={isAdmin ? `/listing/${listing.id}?isAdmin=true` : `/listing/${listing.id}`} className="group block h-full">
       <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-1 h-full flex flex-col border border-gray-100">
         <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
           {listing.images && listing.images.length > 0 ? (
