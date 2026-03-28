@@ -74,19 +74,26 @@
     "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.jest.json"
+        }
+      ]
     },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "./coverage",
-    "testEnvironment": "node",
-    "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/libs/"
+    "transformIgnorePatterns": [
+      "node_modules/(?!(change-case|camel-case|pascal-case|snake-case|dot-case|param-case|capital-case|no-case|lower-case|upper-case)/)"
     ],
     "moduleNameMapper": {
-      "^@lib/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1"
-    }
+      "^@lib/prisma$": "<rootDir>/libs/prisma/src/index.ts",
+      "^@lib/prisma/(.*)$": "<rootDir>/libs/prisma/src/$1",
+      "^libs/prisma/generated/browser$": "<rootDir>/libs/prisma/generated/browser.ts",
+      "^libs/prisma/generated/client$": "<rootDir>/libs/prisma/generated/client.ts"
+    },
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/libs"
+    ]
   }
 }

@@ -23,24 +23,13 @@ export class AppService {
     searchTerm: string;
     sortBy: string;
     sortOrder: string;
-    propertyType: PropertyType;
-    beds: number;
-    baths: number;
-    minPrice: number;
-    maxPrice: number;
+    propertyType: PropertyType | undefined;
+    beds: number | undefined;
+    baths: number | undefined;
+    minPrice: number | undefined;
+    maxPrice: number | undefined;
     isAdmin: boolean;
   }) {
-    console.log('skip', skip);
-    console.log('limit', limit);
-    console.log('searchTerm', searchTerm);
-    console.log('sortBy', sortBy);
-    console.log('sortOrder', sortOrder);
-    console.log('propertyType', propertyType);
-    console.log('beds', beds);
-    console.log('baths', baths);
-    console.log('minPrice', minPrice);
-    console.log('maxPrice', maxPrice);
-
     const where: Prisma.PropertyWhereInput = {};
 
     if (searchTerm) {
@@ -63,15 +52,10 @@ export class AppService {
       where.baths = baths;
     }
 
-    if (minPrice) {
+    if (minPrice || maxPrice) {
       where.price = {
-        gte: minPrice,
-      };
-    }
-
-    if (maxPrice) {
-      where.price = {
-        lte: maxPrice,
+        ...(minPrice && { gte: minPrice }),
+        ...(maxPrice && { lte: maxPrice }),
       };
     }
 
