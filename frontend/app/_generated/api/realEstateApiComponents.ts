@@ -5,14 +5,14 @@
  */
 import * as reactQuery from "@tanstack/react-query";
 import {
-  queryKeyFn,
   type RealEstateApiContext,
   useRealEstateApiContext,
+  queryKeyFn,
 } from "./realEstateApiContext";
+import { deepMerge } from "./realEstateApiUtils";
 import type * as Fetcher from "./realEstateApiFetcher";
 import { realEstateApiFetch } from "./realEstateApiFetcher";
 import type * as Schemas from "./realEstateApiSchemas";
-import { deepMerge } from "./realEstateApiUtils";
 
 type QueryFnOptions = {
   signal?: AbortController["signal"];
@@ -101,7 +101,7 @@ export const fetchAppControllerGetListings = (
     {},
     AppControllerGetListingsQueryParams,
     {}
-  >({ url: "/listings", method: "get", ...variables, signal });
+  >({ url: "/api/listings", method: "get", ...variables, signal });
 
 /**
  * Returns paginated property listings with optional filters for search term, price range, property type, beds, and baths.
@@ -127,7 +127,7 @@ export function appControllerGetListingsQuery(
 ) {
   return {
     queryKey: queryKeyFn({
-      path: "/listings",
+      path: "/api/listings",
       operationId: "appControllerGetListings",
       variables,
     }),
@@ -233,7 +233,7 @@ export const fetchAppControllerGetListingById = (
     {},
     AppControllerGetListingByIdQueryParams,
     AppControllerGetListingByIdPathParams
-  >({ url: "/listings/{id}", method: "get", ...variables, signal });
+  >({ url: "/api/listings/{id}", method: "get", ...variables, signal });
 
 /**
  * Returns a single property listing by its ID.
@@ -259,7 +259,7 @@ export function appControllerGetListingByIdQuery(
 ) {
   return {
     queryKey: queryKeyFn({
-      path: "/listings/{id}",
+      path: "/api/listings/{id}",
       operationId: "appControllerGetListingById",
       variables,
     }),
@@ -333,12 +333,12 @@ export const useAppControllerGetListingById = <
 
 export type QueryOperation =
   | {
-      path: "/listings";
+      path: "/api/listings";
       operationId: "appControllerGetListings";
       variables: AppControllerGetListingsVariables | reactQuery.SkipToken;
     }
   | {
-      path: "/listings/{id}";
+      path: "/api/listings/{id}";
       operationId: "appControllerGetListingById";
       variables: AppControllerGetListingByIdVariables | reactQuery.SkipToken;
     };

@@ -1,6 +1,6 @@
 import type { RealEstateApiContext } from "./realEstateApiContext";
 
-const baseUrl = "/";
+const baseUrl = "http://localhost:7001";
 
 export type ErrorWrapper<TError> =
   | TError
