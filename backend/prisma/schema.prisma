@@ -11,3 +11,74 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum PropertyType {
+  house
+  apartment
+  townhouse
+  land
+  commercial
+}
+
+enum ListingStatus {
+  active
+  under_contract
+  sold
+  withdrawn
+}
+
+model Agent {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  createdAt DateTime @default(now())
+
+  properties Property[]
+
+  @@map("agents")
+}
+
+model Property {
+  id            String        @id @default(uuid())
+  title         String
+  description   String
+  price         Decimal       @db.Decimal(12, 2)
+  beds          Int
+  baths         Int
+  propertyType  PropertyType  @map("property_type")
+  suburb        String
+  status        ListingStatus @default(active)
+  internalNotes String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  agentId String?
+  agent   Agent?  @relation(fields: [agentId], references: [id])
+
+  images PropertyImage[]
+
+  @@index([price])
+  @@index([suburb])
+  @@index([propertyType])
+  @@index([beds])
+  @@index([baths])
+  @@index([status])
+  @@index([createdAt])
+  @@map("properties")
+}
+
+model PropertyImage {
+  id        String   @id @default(uuid())
+  url       String   @default("https://picsum.photos/seed/property/800/600")
+  alt       String?
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@map("property_images")
+}

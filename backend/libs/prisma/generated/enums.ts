@@ -9,7 +9,22 @@
 * 🟢 You can import this file directly.
 */
 
+export const PropertyType = {
+  house: 'house',
+  apartment: 'apartment',
+  townhouse: 'townhouse',
+  land: 'land',
+  commercial: 'commercial'
+} as const
+
+export type PropertyType = (typeof PropertyType)[keyof typeof PropertyType]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const ListingStatus = {
+  active: 'active',
+  under_contract: 'under_contract',
+  sold: 'sold',
+  withdrawn: 'withdrawn'
+} as const
+
+export type ListingStatus = (typeof ListingStatus)[keyof typeof ListingStatus]
