@@ -23,6 +23,13 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
+
+  app.setGlobalPrefix('api');
+
   app.useGlobalInterceptors(new TransformResInterceptor());
 
   const PORT = configService.getOrThrow<number>('PORT');
