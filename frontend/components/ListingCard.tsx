@@ -1,5 +1,6 @@
 import { ListingItemDto } from "@/app/_generated/api/realEstateApiSchemas";
 import Link from "next/link";
+import Image from "next/image";
 
 interface ListingCardProps {
   listing: ListingItemDto;
@@ -12,10 +13,11 @@ export const ListingCard = ({ listing, isAdmin }: ListingCardProps) => {
       <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-1 h-full flex flex-col border border-gray-100">
         <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
           {listing.images && listing.images.length > 0 ? (
-            <img 
+            <Image 
               src={listing.images[0].url} 
               alt={listing.title} 
-              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">

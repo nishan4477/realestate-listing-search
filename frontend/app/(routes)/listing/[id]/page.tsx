@@ -3,6 +3,7 @@
 import { useAppControllerGetListingById } from "@/app/_generated/api/realEstateApiComponents";
 import { Breadcrumb } from "@/components";
 import Link from "next/link";
+import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
@@ -141,10 +142,11 @@ function ListingDetailContent() {
             <div className="bg-white rounded-3xl p-2 sm:p-4 shadow-sm border border-gray-100">
               <div className="aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden bg-gray-100 relative mb-4 flex items-center justify-center">
                 {hasImages ? (
-                  <img
+                  <Image
                     src={listing.images[activeImage].url}
                     alt={`Property image ${activeImage + 1}`}
-                    className="w-full h-full object-cover transition-opacity duration-300"
+                    fill
+                    className="object-cover transition-opacity duration-300"
                   />
                 ) : (
                   <div className="text-gray-400">
@@ -174,10 +176,11 @@ function ListingDetailContent() {
                       onClick={() => setActiveImage(idx)}
                       className={`relative flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden border-2 transition-all ${activeImage === idx ? "border-indigo-600 shadow-md ring-2 ring-indigo-600 ring-offset-2" : "border-transparent hover:border-gray-300 opacity-70 hover:opacity-100"}`}
                     >
-                      <img
+                      <Image
                         src={img.url}
                         alt={`Thumbnail ${idx + 1}`}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </button>
                   ))}
