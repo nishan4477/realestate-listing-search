@@ -71,3 +71,15 @@ pnpm dev
 ```
 
 This will concurrently start your backend, frontend, and any other necessary local development services.
+
+### 6. Running Tests
+
+To run the automated tests for the backend, navigate to the `backend` directory and use the `pnpm` test commands:
+
+```bash
+cd backend
+
+# Run for tests
+pnpm test
+
+```
